@@ -3,16 +3,32 @@
 }
 
 .cell {
+  background-color: rgba(151, 151, 151, 0.486);
   box-sizing: border-box;
   border: 1px solid;
-  height: 100px;
-  width: 100px;
+  height: 50px;
+  width: 50px;
 }
 
 .inventory {
+  position: absolute;
+  top: 20px;
+  left: 20px;
   border: 1px solid;
-  margin: auto;
-  display: flex;
+  margin: 1em auto;
+  display: inline-block;
+  justify-content: flex-start;
+  line-height: 0;
   flex-wrap: wrap;
-  width: 500px;
+  clear: both;
+  flex-shrink: 0;
+  flex-grow: 0;
+  width: 250px;
+}
+
+.item {
+  display:inline-table;
+  float: left;
+  position: relative;
+  background-color: #bfe6ad9d;
 }
