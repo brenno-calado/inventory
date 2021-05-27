@@ -7,8 +7,8 @@ const Inventory = (inventorySize) => {
   const renderItems = () => {
     return (
     inventoryItems.map((item, index) => {
-      const lastItem = index > 0 ? document.getElementById(`item-${index - 1}`).offsetLeft : null;
-      console.log(lastItem);
+      // const lastItem = index > 0 ? document.getElementById(`item-${index - 1}`).offsetLeft : null;
+      // console.log(lastItem);
       return (
       <button
         type="button"
