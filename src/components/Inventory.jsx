@@ -45,7 +45,7 @@ const Inventory = (inventorySize) => {
     if (itemIndex === 0) return position
 
     while (index < itemIndex) {
-      if (positions.some((pos) => doItemsCollide(pos, position))) {
+      if (positions.some((pos) => doItemsCollide(position, pos))) {
         position.left = positions[index].right
         position.right = position.left + item.size.width * cellSize
         if (!enoughWidthSpace(position)) {
@@ -54,7 +54,7 @@ const Inventory = (inventorySize) => {
           position.top += cellSize
           position.bottom += cellSize
           index = -1
-          if (!enoughHeightSpace(position)) return index = itemIndex
+          if (!enoughHeightSpace(position)) return position = null
         }
       }
       index += 1
@@ -64,30 +64,31 @@ const Inventory = (inventorySize) => {
 
   const renderItems = () => {
     return (
-    inventoryItems.map((item, index) => {
-      let position = evaluatePosition({ item, index })
-      positions.push(position)
-
-      return (
-      <div
-        type="button"
-        key={ index }
-        className="item"
-        id={`item-${index}`}
-        draggable
-        style={
-          {
-            left: position.left,
-            height: `${item.size.height * cellSize}px`,
-            top: position.top,
-            width:`${item.size.width * cellSize}px`,
-          }
+      inventoryItems.map((item, index) => {
+        let position = evaluatePosition({ item, index })
+        if (position) {
+          positions.push(position)
+          return (
+            <div
+              type="button"
+              key={index}
+              className="item"
+              id={`item-${index}`}
+              draggable
+              style={
+                {
+                  left: position.left,
+                  height: `${item.size.height * cellSize}px`,
+                  top: position.top,
+                  width: `${item.size.width * cellSize}px`,
+                }
+              }
+            >
+              {item.name}
+            </div>
+          )
         }
-      >
-        {item.name}
-      </div>
-      )
-    }
+      }
     )
   )
   }
