@@ -21,6 +21,8 @@
   },
   "eslintConfig": {
     "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended",
       "react-app",
       "react-app/jest"
     ]
@@ -39,6 +41,7 @@
   },
   "devDependencies": {
     "eslint": "^7.26.0",
+    "eslint-plugin-react": "^7.24.0",
     "stylelint": "^13.13.1"
   }
 }

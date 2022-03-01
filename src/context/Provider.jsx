@@ -5,11 +5,14 @@ import items from '../data/items';
 
 function Provider({ children }) {
   const [hour, setHour] = useState(12);
-  const [inventorySize, setInventorySize] = useState([5,7]);
+  const [inventorySize, setInventorySize] = useState({ width: 5, height: 7 });
   const [inventoryItems, setInventoryItems] = useState([{
-    amount: 0,
+    amount: 1,
     name: 'red apple',
-    size: [1,1],
+    size: {
+      width: 1,
+      height: 1,
+    },
     weight: 100,
     validHours: 72,
   }]);

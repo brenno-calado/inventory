@@ -11,24 +11,17 @@
 }
 
 .inventory {
-  position: absolute;
-  top: 20px;
-  left: 20px;
   border: 1px solid;
+  box-sizing: border-box;
+  left: 20px;
   margin: 1em auto;
-  display: inline-block;
-  justify-content: flex-start;
-  line-height: 0;
-  flex-wrap: wrap;
-  clear: both;
-  flex-shrink: 0;
-  flex-grow: 0;
+  position: sticky;
+  top: 20px;
   width: 250px;
 }
 
 .item {
-  display:inline-table;
-  float: left;
-  position: relative;
   background-color: #bfe6ad9d;
+  box-sizing: border-box;
+  position: absolute;
 }
