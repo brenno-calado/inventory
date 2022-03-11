@@ -12,6 +12,11 @@
   width: 50px;
 }
 
+.drag-over-cell {
+  border: 1px solid rgba(255, 55, 55, 0.6);
+  background-color: rgba(252, 192, 192, 0.6);
+}
+
 .inventory {
   border: 1px solid;
   box-sizing: content-box;
