@@ -5,6 +5,7 @@ const Inventory = (inventorySize) => {
   const { inventoryItems, setInventoryItems } = useContext(InventoryContext);
 
   const [inventoryRect, setInventoryRect] = useState({});
+  const [draggedItem, setDraggedItem] = useState({})
 
   let positions = []
 
@@ -14,9 +15,24 @@ const Inventory = (inventorySize) => {
 
   const cellSize = 50;
 
+  const draggingOnCell = (e) => {
+    e.preventDefault()
+    if (draggedItem.size) e.target.classList.add('drag-over-cell')
+  }
+
+  const draggingOffCell = (e) => {
+    e.preventDefault()
+    e.target.classList.remove('drag-over-cell')
+  }
+
   const renderCells = () => {
     const numberOfCells = inventorySize.width * inventorySize.height
-    const arr = new Array(numberOfCells).fill(<div className='cell'></div>)
+    const arr = new Array(numberOfCells).fill(
+      <div
+        className='cell' onDragEnter={draggingOnCell} onDragLeave={draggingOffCell} onDragExit={draggingOffCell}
+      >
+      </div>
+    )
     return arr
   }
 
@@ -45,8 +61,9 @@ const Inventory = (inventorySize) => {
     if (itemIndex === 0) return position
 
     while (index < itemIndex) {
-      if (positions.some((pos) => doItemsCollide(position, pos))) {
-        position.left = positions[index].right
+      const collidedObject = positions.find((pos) => doItemsCollide(position, pos))
+        if (collidedObject) {
+        position.left = collidedObject.right
         position.right = position.left + item.size.width * cellSize
         if (!enoughWidthSpace(position)) {
           position.left = 0
@@ -75,6 +92,8 @@ const Inventory = (inventorySize) => {
               className="item"
               id={`item-${index}`}
               draggable
+              onDragStart={() => setDraggedItem(item)}
+              onDragEnd={() => setDraggedItem({})}
               style={
                 {
                   left: position.left,
