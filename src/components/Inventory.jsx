@@ -14,6 +14,7 @@ const Inventory = (inventorySize) => {
   }, [])
 
   const draggingOverCell = (e) => {
+    if (!draggedItem.size) return
     // get position
     setPosition({
       left: e.target.offsetLeft,
@@ -29,7 +30,7 @@ const Inventory = (inventorySize) => {
     if (
       !enoughHeightSpace({ bottom: position.bottom })
       || !enoughWidthSpace({ right: position.right })
-      || inventoryItems.find((item) => doItemsCollide(position, item.position))
+      || inventoryItems.find((item, index) => doItemsCollide(position, item.position) && draggedItem.index !== index)
       ) {
         shadow.classList.add('drag-over-unavailable')
       } else {
@@ -50,18 +51,16 @@ const Inventory = (inventorySize) => {
   const draggingOffCell = () => removeShadows()
   
   const evaluateDrop = (e) => {
-    console.log(inventoryItems);
     e.preventDefault()
     e.stopPropagation()
-    console.log("position => ", position);
-    
+
     // if the item fits
     if (
       enoughHeightSpace({ bottom: position.bottom })
       && enoughWidthSpace({ right: position.right })
-      && !(inventoryItems.find((item) => doItemsCollide(position, item.position)))
+      && !(inventoryItems.find((item, index) => doItemsCollide(position, item.position) && draggedItem.index !== index))
     ) {
-      inventoryItems.splice(draggedItem.index, 1, { ...inventoryItems[draggedItem.index], position })
+      inventoryItems.splice(draggedItem.index, 1, { ...draggedItem, position })
       }
     removeShadows()
   }
@@ -90,8 +89,13 @@ const Inventory = (inventorySize) => {
   }
 
   const droppedInventoryItem = (e) => {
+    e.target.classList.remove('hidden')
     evaluateDrop(e)
     setDraggedItem({})
+  }
+
+  const hideSelfItem = (e) => {
+    if (e.target.id === `item-${draggedItem.index}`) e.target.classList.add('hidden')
   }
 
   const renderItems = () => {
@@ -105,7 +109,8 @@ const Inventory = (inventorySize) => {
               id={`item-${index}`}
               draggable
               onDragStart={() => draggingInventoryItem(item, index)}
-              onDragEnd={(e) => droppedInventoryItem(e)}
+              onDragOver={hideSelfItem}
+              onDragEnd={droppedInventoryItem}
               style={
                 {
                   left: item.position.left,
