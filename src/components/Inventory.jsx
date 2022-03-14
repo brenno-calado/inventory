@@ -62,7 +62,6 @@ const Inventory = (inventorySize) => {
     }
     if (!doItemsCollide(mousePosition, inventoryRect)) {
       const answer = window.confirm('Deseja excluir?')
-      console.log(draggedItem);
       if (answer) return inventoryItems.splice(draggedItem.index, 1)
     }
     // if the item fits

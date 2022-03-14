@@ -10,14 +10,25 @@ function App() {
     items,
     inventoryItems,
     setInventoryItems,
-    evaluatePosition
+    evaluatePosition,
+    doItemsCollide,
+    inventoryRect
   } = useContext(InventoryContext);
 
-  const checkInventory = (item) => {
-    const position = evaluatePosition({ item, index: inventoryItems.length })
-    if (position) {
-      const itemToAdd = { ...item, position }
-      setInventoryItems([...inventoryItems, itemToAdd])
+  const checkInventory = (e, item) => {
+    const mousePosition = {
+      left: e.clientX,
+      right: e.clientX,
+      top: e.clientY,
+      bottom: e.clientY
+    }
+    if (doItemsCollide(mousePosition, inventoryRect)) {
+      const position = evaluatePosition({ item, index: inventoryItems.length })
+      if (position) {
+        const itemToAdd = { ...item, position }
+        return setInventoryItems([...inventoryItems, itemToAdd])
+      }
+      window.alert("No space")
     }
   }
 
@@ -27,9 +38,10 @@ function App() {
         {Inventory(inventorySize)}
         {items.map((item, index) => (
           <button
-          key={index}
-          type="button"
-          onClick={() => checkInventory(item)}
+            key={index}
+            draggable
+            type="button"
+            onDragEnd={(e) => checkInventory(e, item)}
           >
             { item.name }
           </button>
