@@ -12,9 +12,14 @@
   width: 50px;
 }
 
-.drag-over-cell {
+.drag-over-unavailable {
   border: 1px solid rgba(255, 55, 55, 0.6);
   background-color: rgba(252, 192, 192, 0.6);
+}
+
+.drag-over-available {
+  border: 1px solid rgba(55, 255, 55, 0.6);
+  background-color: rgba(206, 252, 192, 0.6);
 }
 
 .inventory {
