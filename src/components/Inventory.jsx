@@ -3,7 +3,7 @@ import InventoryContext from '../context/InventoryContext';
 
 const Inventory = (inventorySize) => {
   const {
-    inventoryItems, setInventoryItems, setInventoryRect, cellSize, doItemsCollide, enoughWidthSpace, enoughHeightSpace
+    inventoryItems, setInventoryItems, inventoryRect, setInventoryRect, cellSize, doItemsCollide, enoughWidthSpace, enoughHeightSpace
   } = useContext(InventoryContext);
 
   const [draggedItem, setDraggedItem] = useState({})
@@ -54,6 +54,17 @@ const Inventory = (inventorySize) => {
     e.preventDefault()
     e.stopPropagation()
 
+    const mousePosition = {
+      left: e.clientX,
+      right: e.clientX,
+      top: e.clientY,
+      bottom: e.clientY
+    }
+    if (!doItemsCollide(mousePosition, inventoryRect)) {
+      const answer = window.confirm('Deseja excluir?')
+      console.log(draggedItem);
+      if (answer) return inventoryItems.splice(draggedItem.index, 1)
+    }
     // if the item fits
     if (
       enoughHeightSpace({ bottom: position.bottom })
