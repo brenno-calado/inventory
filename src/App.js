@@ -8,13 +8,17 @@ function App() {
   const {
     inventorySize,
     items,
-    inventoryItems, setInventoryItems,
+    inventoryItems,
+    setInventoryItems,
+    evaluatePosition
   } = useContext(InventoryContext);
 
   const checkInventory = (item) => {
-    console.log(item);
-    item['amount'] = item.amount + 1;
-    setInventoryItems([ ...inventoryItems, item ])
+    const position = evaluatePosition({ item, index: inventoryItems.length })
+    if (position) {
+      const itemToAdd = { ...item, position }
+      setInventoryItems([...inventoryItems, itemToAdd])
+    }
   }
 
   return (
