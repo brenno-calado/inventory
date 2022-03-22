@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import InventoryContext from '../context/InventoryContext';
 
-const Inventory = (inventorySize) => {
+const Inventory = () => {
   const {
-    inventoryItems, setInventoryItems, inventoryRect, setInventoryRect, cellSize, doItemsCollide, enoughWidthSpace, enoughHeightSpace
+    inventoryItems, inventorySize, setInventoryItems, inventoryRect, setInventoryRect, cellSize, doItemsCollide, enoughWidthSpace, enoughHeightSpace
   } = useContext(InventoryContext);
 
   const [draggedItem, setDraggedItem] = useState({})
@@ -149,10 +149,11 @@ const Inventory = (inventorySize) => {
           height: `${inventorySize.height * cellSize}px`
         }}>
         { renderCells() }
-        { renderItems() }
-      </div>
+        {renderItems()}
+        <hr />
       { `Peso total: ${inventoryWeight()}g ` }
       <button type="button" onClick={() => setInventoryItems([])}>Clean inventory</button>
+      </div>
     </>
   )
 }

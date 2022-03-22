@@ -5,46 +5,30 @@ import './App.css';
 
 
 function App() {
-  const {
-    inventorySize,
-    items,
-    inventoryItems,
-    setInventoryItems,
-    evaluatePosition,
-    doItemsCollide,
-    inventoryRect
-  } = useContext(InventoryContext);
-
-  const checkInventory = (e, item) => {
-    const mousePosition = {
-      left: e.clientX,
-      right: e.clientX,
-      top: e.clientY,
-      bottom: e.clientY
-    }
-    if (doItemsCollide(mousePosition, inventoryRect)) {
-      const position = evaluatePosition({ item, index: inventoryItems.length })
-      if (position) {
-        const itemToAdd = { ...item, position }
-        return setInventoryItems([...inventoryItems, itemToAdd])
-      }
-      window.alert("No space")
-    }
-  }
+  const { items, checkInventory } = useContext(InventoryContext);
 
   return (
     <div className="App">
       <main>
-        {Inventory(inventorySize)}
+        {<Inventory />}
         {items.map((item, index) => (
-          <button
+          <div
             key={index}
             draggable
+            className='outside-item'
             type="button"
             onDragEnd={(e) => checkInventory(e, item)}
+            style={
+              {
+                left: 0,
+                height: `${item.size.height * 50}px`,
+                top: 0,
+                width: `${item.size.width * 50}px`,
+              }
+            }
           >
             { item.name }
-          </button>
+          </div>
         ))}
       </main>
     </div>

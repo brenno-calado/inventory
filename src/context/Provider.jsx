@@ -48,6 +48,7 @@ function Provider({ children }) {
     }
     let index = 0
 
+    if (!enoughWidthSpace(position) || !enoughHeightSpace(position)) return null
     if (itemIndex === 0) return position
 
     while (index < itemIndex) {
@@ -61,12 +62,29 @@ function Provider({ children }) {
           position.top += cellSize
           position.bottom += cellSize
           index = -1
-          if (!enoughHeightSpace(position)) return position = null
+          if (!enoughHeightSpace(position)) return null
         }
       }
       index += 1
     }
     return position
+  }
+
+  const checkInventory = (e, item) => {
+    const mousePosition = {
+      left: e.clientX,
+      right: e.clientX,
+      top: e.clientY,
+      bottom: e.clientY
+    }
+    if (doItemsCollide(mousePosition, inventoryRect)) {
+      const position = evaluatePosition({ item, index: inventoryItems.length })
+      if (position) {
+        const itemToAdd = { ...item, position }
+        return setInventoryItems([...inventoryItems, itemToAdd])
+      }
+      window.alert("No space")
+    }
   }
 
   const context = {
@@ -83,7 +101,8 @@ function Provider({ children }) {
     setInventorySize,
     setInventoryItems,
     setInventoryRect,
-    evaluatePosition
+    evaluatePosition,
+    checkInventory
   };
   return (
     <InventoryContext.Provider value={context}>

@@ -68,6 +68,16 @@ const items = [
     },
     validHours: undefined,
     weight: 4000
+  },
+  {
+    amount: 1,
+    name: 'Jackfruit wood log',
+    size: {
+      width: 8,
+      height: 2
+    },
+    validHours: undefined,
+    weight: 15000
   }
 ]
 

@@ -38,6 +38,15 @@
 
 .item {
   background-color: #bfe6ad9d;
+  border: 1px solid lightslategray;
   box-sizing: border-box;
   position: absolute;
+}
+
+.outside-item {
+  background-color: rgb(255, 188, 180);
+  border: 1px solid lightslategray;
+  box-sizing: border-box;
+  display: inline-block;
+  margin: 1em;
 }
