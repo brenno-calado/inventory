@@ -1,90 +1,116 @@
 import React, { useContext, useEffect, useState } from 'react';
 import InventoryContext from '../context/InventoryContext';
 
-const Inventory = (inventorySize) => {
-  const { inventoryItems, setInventoryItems } = useContext(InventoryContext);
+const Inventory = () => {
+  const {
+    inventoryItems, inventorySize, setInventoryItems, inventoryRect, setInventoryRect, cellSize, doItemsCollide, enoughWidthSpace, enoughHeightSpace
+  } = useContext(InventoryContext);
 
-  const [inventoryRect, setInventoryRect] = useState({});
   const [draggedItem, setDraggedItem] = useState({})
-
-  let positions = []
+  const [position, setPosition] = useState({})
 
   useEffect(() => {
     setInventoryRect(document.querySelector('.inventory').getBoundingClientRect());
   }, [])
 
-  const cellSize = 50;
+  const draggingOverCell = (e) => {
+    if (!draggedItem.size) return
+    // get position
+    setPosition({
+      left: e.target.offsetLeft,
+      top: e.target.offsetTop,
+      right: e.target.offsetLeft + draggedItem.size.width * cellSize,
+      bottom: e.target.offsetTop + draggedItem.size.height * cellSize
+    })
+    // add shadow item with position
+    const shadow = document.createElement('div')
+    shadow.style = `position:absolute;top:${position.top}px;left:${position.left}px;width:${draggedItem.size.width * cellSize}px;height:${draggedItem.size.height * cellSize}px`
+    // validate if item fits width and height
+    // validate if it hits with other objects
+    if (
+      !enoughHeightSpace({ bottom: position.bottom })
+      || !enoughWidthSpace({ right: position.right })
+      || inventoryItems.find((item, index) => doItemsCollide(position, item.position) && draggedItem.index !== index)
+      ) {
+        shadow.classList.add('drag-over-unavailable')
+      } else {
+        shadow.classList.add('drag-over-available')
+      }
 
-  const draggingOnCell = (e) => {
-    e.preventDefault()
-    if (draggedItem.size) e.target.classList.add('drag-over-cell')
+    const inventory = document.querySelector('.inventory')
+    inventory.appendChild(shadow)
   }
 
-  const draggingOffCell = (e) => {
+  const removeShadows = () => {
+    const offShadow = document.querySelector('.drag-over-unavailable')
+    const shadow = document.querySelector('.drag-over-available')
+    if (shadow) shadow.remove()
+    if (offShadow) offShadow.remove()
+  }
+
+  const draggingOffCell = () => removeShadows()
+  
+  const evaluateDrop = (e) => {
     e.preventDefault()
-    e.target.classList.remove('drag-over-cell')
+    e.stopPropagation()
+
+    const mousePosition = {
+      left: e.clientX,
+      right: e.clientX,
+      top: e.clientY,
+      bottom: e.clientY
+    }
+    if (!doItemsCollide(mousePosition, inventoryRect)) {
+      const answer = window.confirm('Delete item?')
+      if (answer) return inventoryItems.splice(draggedItem.index, 1)
+    }
+    // if the item fits
+    if (
+      enoughHeightSpace({ bottom: position.bottom })
+      && enoughWidthSpace({ right: position.right })
+      && !(inventoryItems.find((item, index) => doItemsCollide(position, item.position) && draggedItem.index !== index))
+    ) {
+      inventoryItems.splice(draggedItem.index, 1, { ...draggedItem, position })
+      }
+    removeShadows()
   }
 
   const renderCells = () => {
     const numberOfCells = inventorySize.width * inventorySize.height
-    const arr = new Array(numberOfCells).fill(
-      <div
-        className='cell' onDragEnter={draggingOnCell} onDragLeave={draggingOffCell} onDragExit={draggingOffCell}
-      >
-      </div>
-    )
+    const arr = new Array(numberOfCells)
+    for (let i = 0; i < arr.length; i++) {
+      arr[i] = (
+        <div
+          key={i}
+          onDragOver={draggingOverCell}
+          onDragLeaveCapture={draggingOffCell}
+          onDragLeave={draggingOffCell}
+          onDragExit={draggingOffCell}
+          className={`cell cell-${i}`}
+        >
+        </div>
+      )
+    }
     return arr
   }
 
-  const doItemsCollide = (item1, item2) => {
-    return !(
-      item1.right <= item2.left ||
-      item1.left >= item2.right ||
-      item1.bottom <= item2.top ||
-      item1.top >= item2.bottom
-      )
+  const draggingInventoryItem = (item, index) => {
+    setDraggedItem({ ...item, index })
   }
 
-  const enoughWidthSpace = (position) => inventoryRect.width >= position.right
+  const droppedInventoryItem = (e) => {
+    e.target.classList.remove('hidden')
+    evaluateDrop(e)
+    setDraggedItem({})
+  }
 
-  const enoughHeightSpace = (position) => inventoryRect.height >= position.bottom
-
-  const evaluatePosition = ({ item, index: itemIndex }) => {
-    let position = {
-      left: 0,
-      top: 0,
-      right: item.size.width * cellSize,
-      bottom: item.size.height * cellSize
-    }
-    let index = 0
-
-    if (itemIndex === 0) return position
-
-    while (index < itemIndex) {
-      const collidedObject = positions.find((pos) => doItemsCollide(position, pos))
-        if (collidedObject) {
-        position.left = collidedObject.right
-        position.right = position.left + item.size.width * cellSize
-        if (!enoughWidthSpace(position)) {
-          position.left = 0
-          position.right = item.size.width * cellSize
-          position.top += cellSize
-          position.bottom += cellSize
-          index = -1
-          if (!enoughHeightSpace(position)) return position = null
-        }
-      }
-      index += 1
-    }
-    return position
+  const hideSelfItem = (e) => {
+    if (e.target.id === `item-${draggedItem.index}`) e.target.classList.add('hidden')
   }
 
   const renderItems = () => {
     return (
       inventoryItems.map((item, index) => {
-        let position = evaluatePosition({ item, index })
-        if (position) {
-          positions.push(position)
           return (
             <div
               type="button"
@@ -92,13 +118,14 @@ const Inventory = (inventorySize) => {
               className="item"
               id={`item-${index}`}
               draggable
-              onDragStart={() => setDraggedItem(item)}
-              onDragEnd={() => setDraggedItem({})}
+              onDragStart={() => draggingInventoryItem(item, index)}
+              onDragOver={hideSelfItem}
+              onDragEnd={droppedInventoryItem}
               style={
                 {
-                  left: position.left,
+                  left: item.position.left,
                   height: `${item.size.height * cellSize}px`,
-                  top: position.top,
+                  top: item.position.top,
                   width: `${item.size.width * cellSize}px`,
                 }
               }
@@ -106,7 +133,6 @@ const Inventory = (inventorySize) => {
               {item.name}
             </div>
           )
-        }
       }
     )
   )
@@ -115,19 +141,18 @@ const Inventory = (inventorySize) => {
   const inventoryWeight = () => inventoryItems.reduce((acc, item) => acc + item.weight, 0)
 
   return (
-    <>
-      <div
-        className="inventory"
-        style={{
-          width: `${inventorySize.width * cellSize}px`,
-          height: `${inventorySize.height * cellSize}px`
-        }}>
-        { renderCells() }
-        { renderItems() }
-      </div>
-      { `Peso total: ${inventoryWeight()}g ` }
-      <button type="button" onClick={() => setInventoryItems([])}>Clean inventory</button>
-    </>
+    <div
+      className="inventory"
+      style={{
+        width: `${inventorySize.width * cellSize}px`,
+        height: `${inventorySize.height * cellSize}px`
+      }}
+    >
+      {renderCells()}
+      {renderItems()}
+      <p id="total-inventory-weight">{`Total weight: ${inventoryWeight()}g`}</p>
+      <button id="clear-inventory" type="button" onClick={() => setInventoryItems([])}>Clear inventory</button>
+    </div>
   )
 }
 

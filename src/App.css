@@ -12,9 +12,18 @@
   width: 50px;
 }
 
-.drag-over-cell {
+.hidden {
+  z-index: -1;
+}
+
+.drag-over-unavailable {
   border: 1px solid rgba(255, 55, 55, 0.6);
   background-color: rgba(252, 192, 192, 0.6);
+}
+
+.drag-over-available {
+  border: 1px solid rgba(55, 255, 55, 0.6);
+  background-color: rgba(206, 252, 192, 0.6);
 }
 
 .inventory {
@@ -29,6 +38,15 @@
 
 .item {
   background-color: #bfe6ad9d;
+  border: 1px solid lightslategray;
   box-sizing: border-box;
   position: absolute;
+}
+
+.outside-item {
+  background-color: rgb(255, 188, 180);
+  border: 1px solid lightslategray;
+  box-sizing: border-box;
+  display: inline-block;
+  margin: 1em;
 }

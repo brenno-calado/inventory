@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.12.0",
-    "@testing-library/react": "^11.2.6",
-    "@testing-library/user-event": "^12.8.3",
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^12.1.4",
+    "@testing-library/react-hooks": "^7.0.2",
+    "@testing-library/user-event": "^13.5.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-scripts": "4.0.3",
-    "web-vitals": "^1.1.1"
+    "react-scripts": "5.0.0",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "BROWSER=google-chrome-stable react-scripts start",
@@ -40,6 +41,8 @@
     ]
   },
   "devDependencies": {
+    "@4tw/cypress-drag-drop": "^2.1.0",
+    "cypress": "^9.5.2",
     "eslint": "^7.26.0",
     "eslint-plugin-react": "^7.24.0",
     "stylelint": "^13.13.1"
