@@ -6,6 +6,7 @@ import items from '../data/items';
 function Provider({ children }) {
   const cellSize = 50;
 
+  const [viewInventory, setViewInventory] = useState(false)
   const [hour, setHour] = useState(12);
   const [inventoryRect, setInventoryRect] = useState({})
   const [inventorySize, setInventorySize] = useState({ width: 5, height: 7 });
@@ -88,12 +89,14 @@ function Provider({ children }) {
   }
 
   const context = {
+    viewInventory,
     cellSize,
     items,
     hour,
     inventorySize,
     inventoryItems,
     inventoryRect,
+    setViewInventory,
     doItemsCollide,
     enoughHeightSpace,
     enoughWidthSpace,

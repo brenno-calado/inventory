@@ -1,15 +1,20 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Inventory from './components/Inventory';
 import InventoryContext from './context/InventoryContext';
 import './App.css';
 
 
 function App() {
-  const { items, checkInventory } = useContext(InventoryContext);
+  const { items, checkInventory, viewInventory, setViewInventory } = useContext(InventoryContext);
 
+  useEffect(() => {
+    window.addEventListener('keypress', (evt) => {
+      if (evt.key === 'f') setViewInventory(!viewInventory)
+    }, [])
+  })
   return (
     <main className="App">
-      {<Inventory />}
+      { viewInventory ? <Inventory /> : <p>Press F to toggle Inventory</p>}
       {items.map((item, index) => (
         <div
           key={index}
