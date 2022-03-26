@@ -61,7 +61,7 @@ const Inventory = () => {
       bottom: e.clientY
     }
     if (!doItemsCollide(mousePosition, inventoryRect)) {
-      const answer = window.confirm('Deseja excluir?')
+      const answer = window.confirm('Delete item?')
       if (answer) return inventoryItems.splice(draggedItem.index, 1)
     }
     // if the item fits
@@ -141,20 +141,18 @@ const Inventory = () => {
   const inventoryWeight = () => inventoryItems.reduce((acc, item) => acc + item.weight, 0)
 
   return (
-    <>
-      <div
-        className="inventory"
-        style={{
-          width: `${inventorySize.width * cellSize}px`,
-          height: `${inventorySize.height * cellSize}px`
-        }}>
-        { renderCells() }
-        {renderItems()}
-        <hr />
-      { `Peso total: ${inventoryWeight()}g ` }
-      <button type="button" onClick={() => setInventoryItems([])}>Clean inventory</button>
-      </div>
-    </>
+    <div
+      className="inventory"
+      style={{
+        width: `${inventorySize.width * cellSize}px`,
+        height: `${inventorySize.height * cellSize}px`
+      }}
+    >
+      {renderCells()}
+      {renderItems()}
+      <p id="total-inventory-weight">{`Total weight: ${inventoryWeight()}g`}</p>
+      <button id="clear-inventory" type="button" onClick={() => setInventoryItems([])}>Clear inventory</button>
+    </div>
   )
 }
 

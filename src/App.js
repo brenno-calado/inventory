@@ -8,30 +8,28 @@ function App() {
   const { items, checkInventory } = useContext(InventoryContext);
 
   return (
-    <div className="App">
-      <main>
-        {<Inventory />}
-        {items.map((item, index) => (
-          <div
-            key={index}
-            draggable
-            className='outside-item'
-            type="button"
-            onDragEnd={(e) => checkInventory(e, item)}
-            style={
-              {
-                left: 0,
-                height: `${item.size.height * 50}px`,
-                top: 0,
-                width: `${item.size.width * 50}px`,
-              }
+    <main className="App">
+      {<Inventory />}
+      {items.map((item, index) => (
+        <div
+          key={index}
+          draggable
+          className='outside-item'
+          type="button"
+          onDragEnd={(e) => checkInventory(e, item)}
+          style={
+            {
+              left: 0,
+              height: `${item.size.height * 50}px`,
+              top: 0,
+              width: `${item.size.width * 50}px`,
             }
-          >
-            { item.name }
-          </div>
-        ))}
-      </main>
-    </div>
+          }
+        >
+          { item.name }
+        </div>
+      ))}
+    </main>
   );
 }
 
