@@ -1,0 +1,11 @@
+version: '3.1'
+
+services:
+  web:
+    build: ./
+    container_name: front_inventory
+    ports:
+      - 3000:3000
+    volumes:
+      - /app/node_modules
+      - .:/app
