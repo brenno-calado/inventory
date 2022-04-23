@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  height: 100vh;
 }
 
 .cell {
@@ -26,12 +27,19 @@
   background-color: rgba(206, 252, 192, 0.6);
 }
 
+.toggle-inventory {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
 .inventory {
   border: 1px solid;
   box-sizing: content-box;
   left: 20px;
   margin: 1em auto;
-  position: sticky;
+  position: absolute;
   top: 20px;
   width: 250px;
 }
