@@ -1,12 +1,12 @@
-.App {
+.app {
   text-align: center;
   height: 100vh;
 }
 
 .cell {
-  background-color: rgba(214, 214, 214, 0.6);
+  background-color: rgb(214 214 214 / 60%);
   box-sizing: border-box;
-  border: 1px solid rgba(151, 151, 151, 0.6);
+  border: 1px solid rgb(151 151 151 / 60%);
   display: inline-block;
   vertical-align: middle;
   height: 50px;
@@ -18,13 +18,13 @@
 }
 
 .drag-over-unavailable {
-  border: 1px solid rgba(255, 55, 55, 0.6);
-  background-color: rgba(252, 192, 192, 0.6);
+  border: 1px solid rgb(255 55 55 / 60%);
+  background-color: rgb(252 192 192 / 60%);
 }
 
 .drag-over-available {
-  border: 1px solid rgba(55, 255, 55, 0.6);
-  background-color: rgba(206, 252, 192, 0.6);
+  border: 1px solid rgb(55 255 55 / 60%);
+  background-color: rgb(206 252 192 / 60%);
 }
 
 .toggle-inventory {
@@ -52,7 +52,7 @@
 }
 
 .outside-item {
-  background-color: rgb(255, 188, 180);
+  background-color: rgb(255 188 180);
   border: 1px solid lightslategray;
   box-sizing: border-box;
   display: inline-block;

@@ -37,8 +37,7 @@ describe('5 - When dragging over own item', () => {
   })
 
   it('should appear the available shadow', () => {
-    cy.get('div#item-0')
-      .drag('.cell-4', { force: true })
+    cy.get('div#item-0').drag('.cell-4', { force: true })
 
     cy.get('.drag-over-available').should('exist')
   })
@@ -46,29 +45,27 @@ describe('5 - When dragging over own item', () => {
 
 describe('6 - When dropping over available space', () => {
   it('available shadow should appear and item position should update', () => {
-    cy.get('div#item-0').first()
+    cy.get('div#item-0')
+      .first()
       .contains('red apple')
       .drag('.cell-5', { force: true })
     cy.get('.drag-over-available').should('exist')
     cy.wait(100)
-    cy.get('div#item-0').first()
-      .drag('.cell-6', { force: true })
+    cy.get('div#item-0').first().drag('.cell-6', { force: true })
     cy.get('.drag-over-available').should('not.exist')
   })
 })
 
 describe('7 - When dropping over unavailable space', () => {
   it('unavailable shadow should appear and item position remains the same', () => {
-    cy.get('div.outside-item').last()
-      .drag('.cell-5')
+    cy.get('div.outside-item').last().drag('.cell-5')
     cy.get('.drag-over-unavailable').should('exist')
   })
 })
 
 describe('8 - When dragging outside item to the inventory and theres available space', () => {
   it('should stay in the inventory', () => {
-    cy.get('div.outside-item').first()
-      .drag('.cell-5')
+    cy.get('div.outside-item').first().drag('.cell-5')
     cy.wait(100)
     cy.get('div#item-1').should('exist')
   })
@@ -80,8 +77,7 @@ describe('9 - When dragging outside item to the inventory and theres no availabl
       expect(message).to.equal('No space')
     })
 
-    cy.get('div.outside-item').last()
-      .drag('.cell-5')
+    cy.get('div.outside-item').last().drag('.cell-5')
   })
 })
 

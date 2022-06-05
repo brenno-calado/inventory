@@ -1,31 +1,33 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import InventoryContext from './InventoryContext';
-import items from '../data/items';
+import PropTypes from 'prop-types'
+import React, { createContext, useContext, useState } from 'react'
 
-function Provider({ children }) {
-  const cellSize = 50;
+const InventoryContext = createContext()
+
+export function InventoryProvider({ children }) {
+  const cellSize = 50
 
   const [viewInventory, setViewInventory] = useState(false)
-  const [hour, setHour] = useState(12);
+  const [hour, setHour] = useState(12)
   const [inventoryRect, setInventoryRect] = useState({})
-  const [inventorySize, setInventorySize] = useState({ width: 5, height: 7 });
-  const [inventoryItems, setInventoryItems] = useState([{
-    amount: 1,
-    name: 'red apple',
-    size: {
-      width: 1,
-      height: 1,
+  const [inventorySize, setInventorySize] = useState({ width: 5, height: 7 })
+  const [inventoryItems, setInventoryItems] = useState([
+    {
+      amount: 1,
+      name: 'red apple',
+      size: {
+        width: 1,
+        height: 1,
+      },
+      weight: 100,
+      validHours: 72,
+      position: {
+        left: 0,
+        right: cellSize * 1,
+        top: 0,
+        bottom: cellSize * 1,
+      },
     },
-    weight: 100,
-    validHours: 72,
-    position: {
-      left: 0,
-      right: cellSize * 1,
-      top: 0,
-      bottom: cellSize * 1
-    }
-  }]);
+  ])
 
   const doItemsCollide = (item1, item2) => {
     return !(
@@ -33,19 +35,20 @@ function Provider({ children }) {
       item1.left >= item2.right ||
       item1.bottom <= item2.top ||
       item1.top >= item2.bottom
-      )
+    )
   }
 
   const enoughWidthSpace = (position) => inventoryRect.width >= position.right
 
-  const enoughHeightSpace = (position) => inventoryRect.height >= position.bottom
+  const enoughHeightSpace = (position) =>
+    inventoryRect.height >= position.bottom
 
   const evaluatePosition = ({ item, index: itemIndex }) => {
     let position = {
       left: 0,
       top: 0,
       right: item.size.width * cellSize,
-      bottom: item.size.height * cellSize
+      bottom: item.size.height * cellSize,
     }
     let index = 0
 
@@ -53,7 +56,9 @@ function Provider({ children }) {
     if (itemIndex === 0) return position
 
     while (index < itemIndex) {
-      const collidedItem = inventoryItems.find((item) => doItemsCollide(position, item.position))
+      const collidedItem = inventoryItems.find((item) =>
+        doItemsCollide(position, item.position)
+      )
       if (collidedItem) {
         position.left = collidedItem.position.right
         position.right = position.left + item.size.width * cellSize
@@ -76,7 +81,7 @@ function Provider({ children }) {
       left: e.clientX,
       right: e.clientX,
       top: e.clientY,
-      bottom: e.clientY
+      bottom: e.clientY,
     }
     if (doItemsCollide(mousePosition, inventoryRect)) {
       const position = evaluatePosition({ item, index: inventoryItems.length })
@@ -84,14 +89,13 @@ function Provider({ children }) {
         const itemToAdd = { ...item, position }
         return setInventoryItems([...inventoryItems, itemToAdd])
       }
-      window.alert("No space")
+      window.alert('No space')
     }
   }
 
   const context = {
     viewInventory,
     cellSize,
-    items,
     hour,
     inventorySize,
     inventoryItems,
@@ -105,8 +109,9 @@ function Provider({ children }) {
     setInventoryItems,
     setInventoryRect,
     evaluatePosition,
-    checkInventory
-  };
+    checkInventory,
+  }
+
   return (
     <InventoryContext.Provider value={context}>
       {children}
@@ -114,8 +119,12 @@ function Provider({ children }) {
   )
 }
 
-Provider.propTypes = {
+InventoryProvider.propTypes = {
   children: PropTypes.node.isRequired,
-};
+}
 
-export default Provider;
+export const useInventoryContext = () => {
+  const value = useContext(InventoryContext)
+  if (value === null) throw new Error('No Inventory Provider found')
+  return value
+}
