@@ -6,4 +6,3 @@ export * from './Player'
 export * from './Rock'
 export * from './Wall'
 export * from './Wobble'
-

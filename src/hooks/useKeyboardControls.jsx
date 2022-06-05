@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 
 function actionByKey(key) {
   const keys = {
@@ -7,8 +7,8 @@ function actionByKey(key) {
     KeyA: 'moveLeft',
     KeyD: 'moveRight',
     Space: 'jump',
-  };
-  return keys[key];
+  }
+  return keys[key]
 }
 
 export const useKeyboardControls = () => {
@@ -18,7 +18,7 @@ export const useKeyboardControls = () => {
     moveLeft: false,
     moveRight: false,
     jump: false,
-  });
+  })
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -27,26 +27,26 @@ export const useKeyboardControls = () => {
         setMovement((state) => ({
           ...state,
           [actionByKey(e.code)]: true,
-        }));
+        }))
       }
-    };
+    }
     const handleKeyUp = (e) => {
       if (actionByKey(e.code)) {
         setMovement((state) => ({
           ...state,
           [actionByKey(e.code)]: false,
-        }));
+        }))
       }
-    };
+    }
 
-    document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('keyup', handleKeyUp);
+    document.addEventListener('keydown', handleKeyDown)
+    document.addEventListener('keyup', handleKeyUp)
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('keyup', handleKeyUp);
-    };
-  });
+      document.removeEventListener('keydown', handleKeyDown)
+      document.removeEventListener('keyup', handleKeyUp)
+    }
+  })
 
-  return movement;
-};
+  return movement
+}
