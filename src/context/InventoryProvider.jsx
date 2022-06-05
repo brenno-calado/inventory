@@ -6,7 +6,7 @@ const InventoryContext = createContext()
 export function InventoryProvider({ children }) {
   const cellSize = 50
 
-  const [viewInventory, setViewInventory] = useState(false)
+  const [viewInventory, setViewInventory] = useState(true)
   const [hour, setHour] = useState(12)
   const [inventoryRect, setInventoryRect] = useState({})
   const [inventorySize, setInventorySize] = useState({ width: 5, height: 7 })

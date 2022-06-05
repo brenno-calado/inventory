@@ -1,6 +1,7 @@
 import { useSphere } from '@react-three/cannon';
 import { Sphere } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
+import PropTypes from 'prop-types';
 import React, { useEffect, useRef } from 'react';
 import { Vector3 } from 'three';
 import { useKeyboardControls } from '../hooks/useKeyboardControls';
@@ -8,7 +9,7 @@ import { FPVControls } from './FPVControls';
 
 const SPEED = 6;
 
-export const Player = (props) => {
+export const Player = ({ viewInventory, ...props }) => {
   const { camera } = useThree();
   const {
     moveForward,
@@ -59,7 +60,7 @@ export const Player = (props) => {
 
   return (
     <>
-      <FPVControls />
+      <FPVControls viewInventory={viewInventory} />
       <mesh ref={ref} >
         <Sphere args={[1, 100, 100]} scale={1}>
           <meshBasicMaterial
@@ -71,3 +72,7 @@ export const Player = (props) => {
     </>
   );
 };
+
+Player.propTypes = {
+  viewInventory: PropTypes.bool
+}

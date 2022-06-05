@@ -15,7 +15,7 @@ function App() {
 
   return (
     <main className="app">
-      <Environment />
+      <Environment viewInventory={viewInventory} />
       {viewInventory ? null : (
         <p className="toggle-inventory">Press E to toggle Inventory</p>
       )}

@@ -1,24 +1,27 @@
 import { extend, useThree } from '@react-three/fiber';
+import PropTypes from 'prop-types';
 import React, { useEffect, useRef } from 'react';
 import { PointerLockControls as PointerLockControlsImpl } from 'three/examples/jsm/controls/PointerLockControls';
 
 extend({ PointerLockControlsImpl });
 
-export const FPVControls = (props) => {
+export const FPVControls = ({ viewInventory }) => {
   const { camera, gl } = useThree();
   const controls = useRef();
 
   useEffect(() => {
-    document.addEventListener('click', () => {
-      controls.current.lock();
-    });
-  }, []);
+    if (!viewInventory) controls.current.lock();
+    if (viewInventory) controls.current.unlock()
+  }, [viewInventory]);
 
   return (
     <pointerLockControlsImpl
       ref={controls}
       args={[camera, gl.domElement]}
-      {...props}
     />
   );
 };
+
+FPVControls.propTypes = {
+  viewInventory: PropTypes.bool
+}
