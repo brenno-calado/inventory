@@ -1,42 +1,44 @@
-import React from 'react'
+import { useEffect } from 'react'
 import './App.css'
 import Environment from './components/Environment'
 import Inventory from './components/Inventory'
 import { useInventoryContext } from './context/InventoryProvider'
+import { usePlayerContext } from './context/PlayerProvider'
 import items from './data/items'
 
 function App() {
-  const { viewInventory, setViewInventory, checkInventory } =
+  const { viewInventory, setViewInventory, checkInventory, inventoryItems } =
     useInventoryContext()
 
-  window.addEventListener('keyup', (evt) => {
+  const { hover, setHover, nearObject, setNearObject } = usePlayerContext()
+
+  const handleUserKey = (evt) => {
+    if (evt.key === 'f' && hover) checkInventory(evt, nearObject)
     if (evt.key === 'e') setViewInventory(!viewInventory)
-  })
+  }
+
+  useEffect(() => {
+    window.addEventListener('keyup', handleUserKey)
+    return () => {
+      window.removeEventListener('keyup', handleUserKey)
+    }
+  }, [viewInventory, hover, inventoryItems])
 
   return (
     <main className="app">
-      <Environment viewInventory={viewInventory} />
-      {viewInventory ? null : (
+      <Environment
+        viewInventory={viewInventory}
+        hover={hover}
+        setHover={setHover}
+        items={items}
+        nearObject={nearObject}
+        setNearObject={setNearObject}
+      />
+      {hover && <span className="toggle-inventory">Press F to take item</span>}
+      {viewInventory && (
         <p className="toggle-inventory">Press E to toggle Inventory</p>
       )}
       <Inventory />
-      {items.map((item, index) => (
-        <div
-          key={index}
-          draggable
-          className="outside-item"
-          type="button"
-          onDragEnd={(e) => checkInventory(e, item)}
-          style={{
-            left: 0,
-            height: `${item.size.height * 50}px`,
-            top: 0,
-            width: `${item.size.width * 50}px`,
-          }}
-        >
-          {item.name}
-        </div>
-      ))}
     </main>
   )
 }

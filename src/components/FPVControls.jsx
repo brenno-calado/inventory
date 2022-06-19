@@ -1,6 +1,6 @@
 import { extend, useThree } from '@react-three/fiber'
 import PropTypes from 'prop-types'
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { PointerLockControls as PointerLockControlsImpl } from 'three/examples/jsm/controls/PointerLockControls'
 
 extend({ PointerLockControlsImpl })

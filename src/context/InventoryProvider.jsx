@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React, { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useState } from 'react'
 
 const InventoryContext = createContext()
 
@@ -77,20 +77,12 @@ export function InventoryProvider({ children }) {
   }
 
   const checkInventory = (e, item) => {
-    const mousePosition = {
-      left: e.clientX,
-      right: e.clientX,
-      top: e.clientY,
-      bottom: e.clientY,
+    const position = evaluatePosition({ item, index: inventoryItems.length })
+    if (position) {
+      const itemToAdd = { ...item, position }
+      return setInventoryItems([...inventoryItems, itemToAdd])
     }
-    if (doItemsCollide(mousePosition, inventoryRect)) {
-      const position = evaluatePosition({ item, index: inventoryItems.length })
-      if (position) {
-        const itemToAdd = { ...item, position }
-        return setInventoryItems([...inventoryItems, itemToAdd])
-      }
-      window.alert('No space')
-    }
+    window.alert('No space')
   }
 
   const context = {

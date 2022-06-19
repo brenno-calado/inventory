@@ -1,7 +1,6 @@
 import { useSphere } from '@react-three/cannon'
 import { MeshDistortMaterial, Sphere } from '@react-three/drei'
 import PropTypes from 'prop-types'
-import React from 'react'
 
 export const Wobble = ({ position, size, scale }) => {
   const [ref] = useSphere(() => ({ mass: 1000, position }))
