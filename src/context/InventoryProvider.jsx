@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types'
 import { createContext, useContext, useState } from 'react'
+import itemsDatabase from '../data/items'
 
 const InventoryContext = createContext()
 
 export function InventoryProvider({ children }) {
   const cellSize = 50
 
+  const [items, setItems] = useState(itemsDatabase)
   const [viewInventory, setViewInventory] = useState(true)
   const [hour, setHour] = useState(12)
   const [inventoryRect, setInventoryRect] = useState({})
@@ -80,6 +82,7 @@ export function InventoryProvider({ children }) {
     const position = evaluatePosition({ item, index: inventoryItems.length })
     if (position) {
       const itemToAdd = { ...item, position }
+      setItems(items.filter(({ id }) => id !== item.id))
       return setInventoryItems([...inventoryItems, itemToAdd])
     }
     window.alert('No space')
@@ -92,6 +95,8 @@ export function InventoryProvider({ children }) {
     inventorySize,
     inventoryItems,
     inventoryRect,
+    items,
+    setItems,
     setViewInventory,
     doItemsCollide,
     enoughHeightSpace,

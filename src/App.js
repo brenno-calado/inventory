@@ -4,16 +4,20 @@ import Environment from './components/Environment'
 import Inventory from './components/Inventory'
 import { useInventoryContext } from './context/InventoryProvider'
 import { usePlayerContext } from './context/PlayerProvider'
-import items from './data/items'
 
 function App() {
-  const { viewInventory, setViewInventory, checkInventory, inventoryItems } =
-    useInventoryContext()
+  const {
+    viewInventory,
+    setViewInventory,
+    checkInventory,
+    inventoryItems,
+    items,
+  } = useInventoryContext()
 
   const { hover, setHover, nearObject, setNearObject } = usePlayerContext()
 
   const handleUserKey = (evt) => {
-    if (evt.key === 'f' && hover) checkInventory(evt, nearObject)
+    if (evt.key === 'f' && nearObject) checkInventory(evt, nearObject)
     if (evt.key === 'e') setViewInventory(!viewInventory)
   }
 
