@@ -1,11 +1,13 @@
-.App {
+.app {
+  overflow-y: hidden;
   text-align: center;
+  height: 100vh;
 }
 
 .cell {
-  background-color: rgba(214, 214, 214, 0.6);
+  background-color: rgb(214 214 214 / 60%);
   box-sizing: border-box;
-  border: 1px solid rgba(151, 151, 151, 0.6);
+  border: 1px solid rgb(151 151 151 / 60%);
   display: inline-block;
   vertical-align: middle;
   height: 50px;
@@ -17,23 +19,35 @@
 }
 
 .drag-over-unavailable {
-  border: 1px solid rgba(255, 55, 55, 0.6);
-  background-color: rgba(252, 192, 192, 0.6);
+  border: 1px solid rgb(255 55 55 / 60%);
+  background-color: rgb(252 192 192 / 60%);
 }
 
 .drag-over-available {
-  border: 1px solid rgba(55, 255, 55, 0.6);
-  background-color: rgba(206, 252, 192, 0.6);
+  border: 1px solid rgb(55 255 55 / 60%);
+  background-color: rgb(206 252 192 / 60%);
+}
+
+.modal {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
 }
 
 .inventory {
+  scrollbar-width: none;
   border: 1px solid;
   box-sizing: content-box;
   left: 20px;
   margin: 1em auto;
-  position: sticky;
+  position: absolute;
   top: 20px;
   width: 250px;
+}
+
+.inventory::-webkit-scrollbar {
+  display: none;
 }
 
 .item {
@@ -43,10 +57,12 @@
   position: absolute;
 }
 
-.outside-item {
-  background-color: rgb(255, 188, 180);
-  border: 1px solid lightslategray;
-  box-sizing: border-box;
-  display: inline-block;
-  margin: 1em;
+.reticle {
+  padding: 2px;
+  border: 1px solid red;
+  border-radius: 4px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

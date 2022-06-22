@@ -13,7 +13,7 @@ jobs:
           node-version: 14
 
       - name: Install modules
-        run: yarn i
+        run: yarn
 
       - name: Run linter on back-end
         run: yarn lint

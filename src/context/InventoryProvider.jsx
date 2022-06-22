@@ -1,0 +1,111 @@
+import PropTypes from 'prop-types'
+import { createContext, useContext, useState } from 'react'
+import itemsDatabase from '../data/items'
+
+const InventoryContext = createContext()
+
+export function InventoryProvider({ children }) {
+  const cellSize = 50
+
+  const [items, setItems] = useState(itemsDatabase)
+  const [viewInventory, setViewInventory] = useState(true)
+  const [hour, setHour] = useState(12)
+  const [inventoryRect, setInventoryRect] = useState({})
+  const [inventorySize, setInventorySize] = useState({ width: 5, height: 7 })
+  const [inventoryItems, setInventoryItems] = useState([])
+  const [noSpace, setNoSpace] = useState(false)
+
+  const doItemsCollide = (item1, item2) => {
+    return !(
+      item1.right <= item2.left ||
+      item1.left >= item2.right ||
+      item1.bottom <= item2.top ||
+      item1.top >= item2.bottom
+    )
+  }
+
+  const enoughWidthSpace = (position) => inventoryRect.width >= position.right
+
+  const enoughHeightSpace = (position) => inventoryRect.height >= position.bottom
+
+  const evaluatePosition = ({ item, index: itemIndex }) => {
+    let position = {
+      left: 0,
+      top: 0,
+      right: item.size.width * cellSize,
+      bottom: item.size.height * cellSize,
+    }
+    let index = 0
+
+    if (!enoughWidthSpace(position) || !enoughHeightSpace(position)) return null
+    if (itemIndex === 0) return position
+
+    while (index < itemIndex) {
+      const collidedItem = inventoryItems.find((item) =>
+        doItemsCollide(position, item.position)
+      )
+      if (collidedItem) {
+        position.left = collidedItem.position.right
+        position.right = position.left + item.size.width * cellSize
+        if (!enoughWidthSpace(position)) {
+          position.left = 0
+          position.right = item.size.width * cellSize
+          position.top += cellSize
+          position.bottom += cellSize
+          index = -1
+          if (!enoughHeightSpace(position)) return null
+        }
+      }
+      index += 1
+    }
+    return position
+  }
+
+  const checkInventory = (item) => {
+    const position = evaluatePosition({ item, index: inventoryItems.length })
+    if (position) {
+      setItems(items.filter(({ id }) => id !== item.id))
+      setInventoryItems([...inventoryItems, { ...item, position }])
+      return true
+    }
+  }
+
+  const context = {
+    viewInventory,
+    cellSize,
+    hour,
+    inventorySize,
+    inventoryItems,
+    inventoryRect,
+    items,
+    noSpace,
+    setNoSpace,
+    setItems,
+    setViewInventory,
+    doItemsCollide,
+    enoughHeightSpace,
+    enoughWidthSpace,
+    setHour,
+    setInventorySize,
+    setInventoryItems,
+    setInventoryRect,
+    evaluatePosition,
+    checkInventory,
+  }
+
+  return (
+    <InventoryContext.Provider value={context}>
+      {children}
+    </InventoryContext.Provider>
+  )
+}
+
+InventoryProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+}
+
+export const useInventoryContext = () => {
+  const value = useContext(InventoryContext)
+  if (value === null) throw new Error('No Inventory Provider found')
+  return value
+}

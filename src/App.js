@@ -1,41 +1,33 @@
-import React, { useContext, useEffect } from 'react';
-import Inventory from './components/Inventory';
-import InventoryContext from './context/InventoryContext';
-import './App.css';
-
+import './App.css'
+import Environment from './components/Environment'
+import Inventory from './components/Inventory'
+import { useInventoryContext } from './context/InventoryProvider'
+import { usePlayerContext } from './context/PlayerProvider'
+import useKeys from './hooks/useKeys'
 
 function App() {
-  const { items, checkInventory, viewInventory, setViewInventory } = useContext(InventoryContext);
+  const { viewInventory, items, noSpace } = useInventoryContext()
 
-  useEffect(() => {
-    window.addEventListener('keypress', (evt) => {
-      if (evt.key === 'f') setViewInventory(!viewInventory)
-    }, [])
-  })
+  const { setHover, nearObject, setNearObject } = usePlayerContext()
+  useKeys()
   return (
-    <main className="App">
-      { viewInventory ? <Inventory /> : <p>Press F to toggle Inventory</p>}
-      {items.map((item, index) => (
-        <div
-          key={index}
-          draggable
-          className='outside-item'
-          type="button"
-          onDragEnd={(e) => checkInventory(e, item)}
-          style={
-            {
-              left: 0,
-              height: `${item.size.height * 50}px`,
-              top: 0,
-              width: `${item.size.width * 50}px`,
-            }
-          }
-        >
-          { item.name }
-        </div>
-      ))}
+    <main className="app">
+      <Environment
+        viewInventory={viewInventory}
+        setHover={setHover}
+        items={items}
+        nearObject={nearObject}
+        setNearObject={setNearObject}
+      />
+      <div className="modal">
+        {nearObject && <p>Press F to take item</p>}
+        {viewInventory && <p>Press E to toggle Inventory</p>}
+        {noSpace && <p>No space</p>}
+      </div>
+      {viewInventory && <Inventory />}
+      <div className="reticle"></div>
     </main>
-  );
+  )
 }
 
-export default App;
+export default App
