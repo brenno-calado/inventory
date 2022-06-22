@@ -36,7 +36,6 @@
 }
 
 .inventory {
-  overflow: auto;
   scrollbar-width: none;
   border: 1px solid;
   box-sizing: content-box;

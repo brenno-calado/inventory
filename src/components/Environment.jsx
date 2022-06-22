@@ -3,7 +3,7 @@ import { Sky } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import PropTypes from 'prop-types'
 import { useRef } from 'react'
-import { Box, Plane, Rock, Wall, Wobble } from './index'
+import { Box, Plane, Rock, Wall } from './index'
 import { Player } from './Player'
 
 const plusOrMinus = () => Math.sign(Math.random()-0.5);
@@ -55,7 +55,6 @@ const Environment = ({ viewInventory, setHover, items, nearObject, setNearObject
         <Wall position={[-12, 0, 0]} rotation={[0, 1.5, 0]} size={[25, 25]} />
         <Wall position={[12, 0, 0]} rotation={[0, 1.5, 0]} size={[25, 25]} />
         <Wall position={[0, 0, 12]} rotation={[0, 0, 0]} size={[25, 25]} />
-        <Wobble position={[0, 10, 0]} scale={1} size={[1, 100, 100]} />
         <Plane position={[0, 0, 0]} rotation={[-1.568, 0, 0]} size={[25, 25]} />
       </Physics>
     </Canvas>
