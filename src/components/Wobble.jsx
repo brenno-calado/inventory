@@ -3,7 +3,7 @@ import { MeshDistortMaterial, Sphere } from '@react-three/drei'
 import PropTypes from 'prop-types'
 
 export const Wobble = ({ position, size, scale }) => {
-  const [ref] = useSphere(() => ({ mass: 1000, position }))
+  const [ref] = useSphere(() => ({ mass: 100, position }))
   return (
     <mesh ref={ref}>
       <Sphere args={size} scale={scale}>

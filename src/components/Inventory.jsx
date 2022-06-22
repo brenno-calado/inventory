@@ -12,7 +12,6 @@ const Inventory = () => {
     doItemsCollide,
     enoughWidthSpace,
     enoughHeightSpace,
-    viewInventory,
   } = useInventoryContext()
 
   const [draggedItem, setDraggedItem] = useState({})
@@ -55,33 +54,18 @@ const Inventory = () => {
       shadow.classList.add('drag-over-available')
     }
 
-    const inventory = document.querySelector('.inventory')
-    inventory.appendChild(shadow)
+    document.querySelector('.inventory').appendChild(shadow)
   }
 
   const removeShadows = () => {
-    const offShadow = document.querySelector('.drag-over-unavailable')
-    const shadow = document.querySelector('.drag-over-available')
-    if (shadow) shadow.remove()
-    if (offShadow) offShadow.remove()
+    document.querySelector('.drag-over-unavailable')?.remove()
+    document.querySelector('.drag-over-available')?.remove()
   }
 
   const draggingOffCell = () => removeShadows()
 
-  const evaluateDrop = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-
-    const mousePosition = {
-      left: e.clientX,
-      right: e.clientX,
-      top: e.clientY,
-      bottom: e.clientY,
-    }
-    if (!doItemsCollide(mousePosition, inventoryRect)) {
-      const answer = window.confirm('Delete item?')
-      if (answer) return inventoryItems.splice(draggedItem.index, 1)
-    }
+  const evaluateDrop = (mousePosition) => {
+    if (!doItemsCollide(mousePosition, inventoryRect) && window.confirm('Delete item?')) return inventoryItems.splice(draggedItem.index, 1)
     // if the item fits
     if (
       enoughHeightSpace({ bottom: position.bottom }) &&
@@ -93,7 +77,6 @@ const Inventory = () => {
     ) {
       inventoryItems.splice(draggedItem.index, 1, { ...draggedItem, position })
     }
-    removeShadows()
   }
 
   const renderCells = () => {
@@ -114,19 +97,28 @@ const Inventory = () => {
     return arr
   }
 
-  const draggingInventoryItem = (item, index) => {
-    setDraggedItem({ ...item, index })
-  }
+  const draggingInventoryItem = (item, index) => setDraggedItem({ ...item, index })
 
   const droppedInventoryItem = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    removeShadows()
     e.target.classList.remove('hidden')
-    evaluateDrop(e)
+
+    const mousePosition = {
+      left: e.clientX,
+      right: e.clientX,
+      top: e.clientY,
+      bottom: e.clientY,
+    }
+
+    evaluateDrop(mousePosition)
     setDraggedItem({})
   }
 
   const hideSelfItem = (e) => {
-    if (e.target.id === `item-${draggedItem.index}`)
-      e.target.classList.add('hidden')
+    if (e.target.id === `item-${draggedItem.index}`) e.target.classList.add('hidden')
   }
 
   const renderItems = () => {
@@ -154,14 +146,12 @@ const Inventory = () => {
     })
   }
 
-  const inventoryWeight = () =>
-    inventoryItems.reduce((acc, item) => acc + item.weight, 0)
+  const inventoryWeight = () => inventoryItems.reduce((acc, item) => acc + item.weight, 0)
 
   return (
     <div
       className="inventory"
       style={{
-        zIndex: `${viewInventory ? '1' : '-1'}`,
         width: `${inventorySize.width * cellSize}px`,
         height: `${inventorySize.height * cellSize}px`,
       }}

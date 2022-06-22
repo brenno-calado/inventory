@@ -1,5 +1,4 @@
 import { useSphere } from '@react-three/cannon'
-import { Sphere } from '@react-three/drei'
 import { useFrame, useThree } from '@react-three/fiber'
 import PropTypes from 'prop-types'
 import { useEffect, useRef } from 'react'
@@ -9,7 +8,7 @@ import { FPVControls } from './FPVControls'
 
 const SPEED = 6
 
-export const Player = ({ viewInventory, ...props }) => {
+export const Player = ({ isLocked, viewInventory, ...props }) => {
   const { camera } = useThree()
   const { moveForward, moveBackward, moveLeft, moveRight, jump } =
     useKeyboardControls()
@@ -54,16 +53,14 @@ export const Player = ({ viewInventory, ...props }) => {
 
   return (
     <>
-      <FPVControls viewInventory={viewInventory} />
+      <FPVControls isLocked={isLocked} viewInventory={viewInventory} />
       <mesh ref={ref}>
-        <Sphere args={[1, 100, 100]} scale={1}>
-          <meshBasicMaterial color="indianred" attach="material" />
-        </Sphere>
       </mesh>
     </>
   )
 }
 
 Player.propTypes = {
+  isLocked: PropTypes.shape({ current: PropTypes.bool }),
   viewInventory: PropTypes.bool,
 }

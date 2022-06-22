@@ -2,6 +2,7 @@ import { Physics } from '@react-three/cannon'
 import { Sky } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import PropTypes from 'prop-types'
+import { useRef } from 'react'
 import { Box, Plane, Rock, Wall, Wobble } from './index'
 import { Player } from './Player'
 
@@ -9,6 +10,8 @@ const plusOrMinus = () => Math.sign(Math.random()-0.5);
 const randPos = () => plusOrMinus() * (Math.random() * 12)
 
 const Environment = ({ viewInventory, setHover, items, nearObject, setNearObject }) => {
+  const isLocked = useRef(false);
+
   const Boxes = items.map((item) =>
     <Box
       key={item.id}
@@ -22,13 +25,26 @@ const Environment = ({ viewInventory, setHover, items, nearObject, setNearObject
   )
 
   return (
-    <Canvas>
+    <Canvas
+      raycaster={{
+        computeOffsets: (_, { size: { width, height } }) => {
+          if (isLocked.current) {
+            return ({
+              offsetX: width / 2,
+              offsetY: height / 2
+            })
+          } else {
+            return null;
+          }
+        }
+      }}
+    >
       <Sky sunPosition={[20, 200, 30]} />
       <ambientLight intensity={0.4} />
       <pointLight castShadow intensity={0.6} position={[100, 100, 100]} />
       <directionalLight position={[-2, 5, 2]} intensity={1} />
       <Physics gravity={[0, -10, 0]}>
-        <Player position={[0, 2, 10]} viewInventory={viewInventory} />
+        <Player position={[0, 2, 10]} isLocked={isLocked} viewInventory={viewInventory} />
         <Rock
           position={[-5.5, -0.8, -3]}
           rotation={[90, 0, 20]}

@@ -28,7 +28,7 @@
   background-color: rgb(206 252 192 / 60%);
 }
 
-.toggle-inventory {
+.modal {
   position: absolute;
   top: 0;
   left: 50%;
@@ -36,6 +36,8 @@
 }
 
 .inventory {
+  overflow: auto;
+  scrollbar-width: none;
   border: 1px solid;
   box-sizing: content-box;
   left: 20px;
@@ -45,9 +47,23 @@
   width: 250px;
 }
 
+.inventory::-webkit-scrollbar {
+  display: none;
+}
+
 .item {
   background-color: #bfe6ad9d;
   border: 1px solid lightslategray;
   box-sizing: border-box;
   position: absolute;
+}
+
+.reticle {
+  padding: 2px;
+  border: 1px solid red;
+  border-radius: 4px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

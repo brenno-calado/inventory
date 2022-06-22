@@ -12,24 +12,8 @@ export function InventoryProvider({ children }) {
   const [hour, setHour] = useState(12)
   const [inventoryRect, setInventoryRect] = useState({})
   const [inventorySize, setInventorySize] = useState({ width: 5, height: 7 })
-  const [inventoryItems, setInventoryItems] = useState([
-    {
-      amount: 1,
-      name: 'red apple',
-      size: {
-        width: 1,
-        height: 1,
-      },
-      weight: 100,
-      validHours: 72,
-      position: {
-        left: 0,
-        right: cellSize * 1,
-        top: 0,
-        bottom: cellSize * 1,
-      },
-    },
-  ])
+  const [inventoryItems, setInventoryItems] = useState([])
+  const [noSpace, setNoSpace] = useState(false)
 
   const doItemsCollide = (item1, item2) => {
     return !(
@@ -42,8 +26,7 @@ export function InventoryProvider({ children }) {
 
   const enoughWidthSpace = (position) => inventoryRect.width >= position.right
 
-  const enoughHeightSpace = (position) =>
-    inventoryRect.height >= position.bottom
+  const enoughHeightSpace = (position) => inventoryRect.height >= position.bottom
 
   const evaluatePosition = ({ item, index: itemIndex }) => {
     let position = {
@@ -78,14 +61,13 @@ export function InventoryProvider({ children }) {
     return position
   }
 
-  const checkInventory = (e, item) => {
+  const checkInventory = (item) => {
     const position = evaluatePosition({ item, index: inventoryItems.length })
     if (position) {
-      const itemToAdd = { ...item, position }
       setItems(items.filter(({ id }) => id !== item.id))
-      return setInventoryItems([...inventoryItems, itemToAdd])
+      setInventoryItems([...inventoryItems, { ...item, position }])
+      return true
     }
-    window.alert('No space')
   }
 
   const context = {
@@ -96,6 +78,8 @@ export function InventoryProvider({ children }) {
     inventoryItems,
     inventoryRect,
     items,
+    noSpace,
+    setNoSpace,
     setItems,
     setViewInventory,
     doItemsCollide,
