@@ -13,7 +13,7 @@
 
 <h3 align="center">Tetris Inventory</h3>
 
-  ![Inventory demonstration](/public/demo.gif)
+  ![Inventory demonstration](/demo.gif)
   <p align="center">
     This repository was inspired by Escape from Tarkov inventory system. It is made with React and tested with Cypress
     <a href="https://github.com/brenno-calado/inventory/issues">Bug Report</a>
